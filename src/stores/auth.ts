@@ -26,19 +26,16 @@ export const useAuthStore = defineStore("auth", () => {
   const user = ref<User | null>(null);
   const isLoading = ref(false);
 
-  // Generate a simple session token (for demo purposes)
   const generateToken = (email: string): string => {
     return btoa(`${email}:${Date.now()}`);
   };
 
-  // Get session data with registered users
   const getSession = (): Session | null => {
     const sessionData = localStorage.getItem("ticketapp_session");
     if (!sessionData) return null;
     return JSON.parse(sessionData);
   };
 
-  // Save session data
   const saveSession = (sessionData: Session) => {
     localStorage.setItem("ticketapp_session", JSON.stringify(sessionData));
   };
@@ -46,10 +43,8 @@ export const useAuthStore = defineStore("auth", () => {
   async function login(email: string, password: string) {
     isLoading.value = true;
     try {
-      // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Check for demo user credentials first
       if (email === "demo@example.com" && password === "password123") {
         const demoUser = {
           id: "demo-user",
@@ -59,7 +54,6 @@ export const useAuthStore = defineStore("auth", () => {
         };
         const token = generateToken(email);
 
-        // Get any existing users from session
         const session = getSession();
         const registeredUsers = session?.registeredUsers || [];
 
@@ -113,13 +107,11 @@ export const useAuthStore = defineStore("auth", () => {
   async function signup(name: string, email: string, password: string) {
     isLoading.value = true;
     try {
-      // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const session = getSession();
       const registeredUsers = session?.registeredUsers || [];
 
-      // Check if email already exists
       if (registeredUsers.some((u) => u.email === email)) {
         throw new Error("Email already exists");
       }
@@ -132,7 +124,6 @@ export const useAuthStore = defineStore("auth", () => {
         password,
       };
 
-      // Update registered users
       const updatedUsers = [...registeredUsers, newUser];
 
       // If this is the first user, create new session, otherwise update existing
@@ -158,10 +149,9 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   function logout() {
-    // Clear session from localStorage
     localStorage.removeItem("ticketapp_session");
     user.value = null;
-    router.push("/"); // Redirect to landing page
+    router.push("/"); 
   }
 
   function checkAuth(): boolean {
@@ -180,7 +170,7 @@ export const useAuthStore = defineStore("auth", () => {
   const initializeStore = () => {
     const session = getSession();
     if (!session) {
-      // Create demo user
+
       const demoUser = {
         id: crypto.randomUUID(),
         name: "Demo User",

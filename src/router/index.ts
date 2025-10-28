@@ -66,7 +66,6 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // Guest routes (login, signup)
   else if (to.matched.some((record) => record.meta.guest)) {
     if (isAuthenticated) {
       next("/dashboard");
@@ -75,7 +74,6 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // Public routes
   else {
     next();
   }

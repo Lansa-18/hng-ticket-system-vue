@@ -13,74 +13,33 @@
           {{ ticket.description }}
         </p>
       </div>
-      <div class="flex items-center gap-2">
-        <span
-          :class="[
-            'px-2.5 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full whitespace-nowrap',
-            getStatusColor(ticket.status),
-          ]"
-        >
-          {{ ticket.status.replace("-", " ") }}
-        </span>
-      </div>
     </div>
-
-    <div
-      class="mt-3 sm:mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-    >
-      <div class="text-xs sm:text-sm text-gray-500 space-y-1">
-        <p>Created: {{ formatDate(ticket.createdAt) }}</p>
-        <p>Last Updated: {{ formatDate(ticket.updatedAt) }}</p>
-      </div>
-
-      <div class="flex items-center gap-3 sm:gap-4">
-        <button
-          @click="$emit('edit', ticket)"
-          class="text-xs sm:text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
-        >
-          Edit
-        </button>
-        <button
-          @click="$emit('delete', ticket)"
-          class="text-xs sm:text-sm font-medium text-red-600 hover:text-red-800 transition-colors"
-        >
-          Delete
-        </button>
-      </div>
+    <div class="mt-3 sm:mt-4 flex flex-row justify-end gap-3 sm:gap-4">
+      <button
+        @click="$emit('edit', ticket)"
+        class="text-xs sm:text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+      >
+        Edit
+      </button>
+      <button
+        @click="$emit('delete', ticket)"
+        class="text-xs sm:text-sm font-medium text-red-600 hover:text-red-800 transition-colors"
+      >
+        Delete
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { type Ticket } from "@/lib/tickets";
+import { MinimalTicket } from "@/lib/tickets";
 
 const props = defineProps<{
-  ticket: Ticket;
+  ticket: MinimalTicket;
 }>();
 
 const emit = defineEmits<{
-  (e: "edit", ticket: Ticket): void;
-  (e: "delete", ticket: Ticket): void;
+  (e: "edit", ticket: MinimalTicket): void;
+  (e: "delete", ticket: MinimalTicket): void;
 }>();
-
-function getStatusColor(status: string) {
-  switch (status) {
-    case "open":
-      return "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20";
-    case "in-progress":
-      return "bg-amber-50 text-amber-700 ring-1 ring-amber-600/20";
-    case "closed":
-      return "bg-gray-100 text-gray-700 ring-1 ring-gray-600/20";
-    default:
-      return "bg-blue-50 text-blue-700 ring-1 ring-blue-600/20";
-  }
-}
-
-function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
 </script>

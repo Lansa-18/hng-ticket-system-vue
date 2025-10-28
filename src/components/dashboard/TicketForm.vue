@@ -73,7 +73,7 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import { z } from "zod";
-import type { Ticket, TicketStatus } from "@/lib/tickets";
+import type { MinimalTicket, Ticket, TicketStatus } from "@/lib/tickets";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -87,7 +87,7 @@ import {
 } from "@/components/ui/select";
 
 const props = defineProps<{
-  ticket?: Ticket;
+  ticket?: MinimalTicket;
 }>();
 
 const emit = defineEmits<{
@@ -116,7 +116,7 @@ const ticketSchema = z.object({
 const form = reactive({
   title: props.ticket?.title ?? "",
   description: props.ticket?.description ?? "",
-  status: props.ticket?.status ?? ("open" as TicketStatus),
+  status: "open" as TicketStatus,
 });
 
 const errors = reactive({

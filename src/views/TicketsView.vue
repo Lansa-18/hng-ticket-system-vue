@@ -59,7 +59,7 @@ import TicketDialog from "@/components/dashboard/TicketDialog.vue";
 import TicketCard from "@/components/dashboard/TicketCard.vue";
 import { ticketService } from "@/lib/tickets";
 import { useToast } from "vue-toastification";
-import type { Ticket, CreateTicketData, UpdateTicketData } from "@/lib/tickets";
+import type { Ticket, CreateTicketData, UpdateTicketData, MinimalTicket } from "@/lib/tickets";
 
 const auth = useAuthStore();
 const toast = useToast();
@@ -68,14 +68,14 @@ const { user } = auth;
 const tickets = ref<Ticket[]>([]);
 const loading = ref(true);
 const dialogOpen = ref(false);
-const editingTicket = ref<Ticket | undefined>();
+const editingTicket = ref<MinimalTicket | undefined>();
 
 const setDialogOpen = (open: boolean) => {
   dialogOpen.value = open;
   if (!open) editingTicket.value = undefined;
 };
 
-const setEditingTicket = (ticket: Ticket) => {
+const setEditingTicket = (ticket: MinimalTicket) => {
   editingTicket.value = ticket;
   dialogOpen.value = true;
 };
@@ -109,14 +109,11 @@ const handleCreateTicket = async (data: CreateTicketData) => {
       ...data,
       userId: user.id,
     });
-    console.log("[TicketsView] newTicket returned:", newTicket);
     tickets.value = [...tickets.value, newTicket];
-    console.log("[TicketsView] tickets array after add:", tickets.value);
     setDialogOpen(false);
     toast.success("Ticket created successfully");
   } catch (error) {
     toast.error("Failed to create ticket");
-    console.error("Ticket creation error:", error);
     throw error;
   }
 };
@@ -140,7 +137,7 @@ const handleUpdateTicket = async (data: UpdateTicketData) => {
   }
 };
 
-const handleDeleteTicket = async (ticket: Ticket) => {
+const handleDeleteTicket = async (ticket: MinimalTicket) => {
   if (!user) return;
 
   try {

@@ -17,6 +17,3 @@
   </div>
 </template>
 
-<script setup lang="ts">
-// Wave background component
-</script>

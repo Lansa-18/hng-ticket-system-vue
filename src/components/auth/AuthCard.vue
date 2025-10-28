@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import WaveBackground from "../ui/Wave.vue";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 
 defineProps<{
   title: string;

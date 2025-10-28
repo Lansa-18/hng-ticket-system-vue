@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Ticket } from "@/lib/tickets";
+import { MinimalTicket, type Ticket } from "@/lib/tickets";
 import {
   Dialog,
   DialogContent,
@@ -43,7 +43,7 @@ import TicketForm from "./TicketForm.vue";
 
 const props = defineProps<{
   modelValue: boolean;
-  ticket?: Ticket;
+  ticket?: MinimalTicket;
 }>();
 
 const emit = defineEmits<{

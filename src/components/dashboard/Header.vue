@@ -1,4 +1,3 @@
-<!-- src/components/dashboard/Header.vue -->
 <template>
   <header class="bg-white shadow">
     <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,4 +1,3 @@
-// Mock tickets for demo user (userId: "1")
 export const mockTickets: Ticket[] = [
   {
     id: "1",
@@ -29,7 +28,6 @@ export const mockTickets: Ticket[] = [
   },
 ];
 
-// Helper to initialize mock tickets in localStorage for demo user
 export function initializeMockTickets() {
   const session = localStorage.getItem("ticketapp_session");
   let currentData;
@@ -38,7 +36,7 @@ export function initializeMockTickets() {
   } catch {
     currentData = { tickets: [] };
   }
-  // Only add if no tickets for demo user
+
   const hasDemoTickets =
     currentData.tickets &&
     currentData.tickets.some((t: Ticket) => t.userId === "1");
@@ -47,7 +45,9 @@ export function initializeMockTickets() {
     localStorage.setItem("ticketapp_session", JSON.stringify(currentData));
   }
 }
+
 export type TicketStatus = "open" | "in-progress" | "closed";
+
 export interface Ticket {
   id: string;
   title: string;
@@ -57,6 +57,12 @@ export interface Ticket {
   createdAt: string;
   updatedAt: string;
 }
+
+export type MinimalTicket = {
+  id: string;
+  title: string;
+  description: string;
+};
 
 export type CreateTicketData = {
   title: string;
