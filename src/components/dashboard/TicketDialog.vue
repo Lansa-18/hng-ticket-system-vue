@@ -1,6 +1,12 @@
 <template>
-  <Dialog :open="modelValue" @update:open="emit('update:modelValue', $event)">
-    <DialogContent class="sm:max-w-[500px]">
+  <Dialog
+    class="p-4"
+    :open="modelValue"
+    @update:open="emit('update:modelValue', $event)"
+  >
+    <DialogContent
+      class="w-[80%] sm:max-w-[500px] sm:mx-0 p-4 sm:p-6 rounded-none sm:rounded-lg"
+    >
       <DialogHeader>
         <DialogTitle>
           {{ ticket ? "Edit Ticket" : "Create New Ticket" }}

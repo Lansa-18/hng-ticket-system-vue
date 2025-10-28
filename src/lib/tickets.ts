@@ -1,3 +1,52 @@
+// Mock tickets for demo user (userId: "1")
+export const mockTickets: Ticket[] = [
+  {
+    id: "1",
+    title: "Setup Development Environment",
+    description: "Need help setting up local development environment",
+    status: "open",
+    createdAt: "2025-10-23T10:00:00Z",
+    updatedAt: "2025-10-23T10:00:00Z",
+    userId: "demo-user",
+  },
+  {
+    id: "2",
+    title: "Database Connection Issue",
+    description: "Unable to connect to production database",
+    status: "in-progress",
+    createdAt: "2025-10-22T15:30:00Z",
+    updatedAt: "2025-10-23T09:15:00Z",
+    userId: "demo-user",
+  },
+  {
+    id: "3",
+    title: "Update Documentation",
+    description: "API documentation needs to be updated",
+    status: "closed",
+    createdAt: "2025-10-21T08:00:00Z",
+    updatedAt: "2025-10-22T16:45:00Z",
+    userId: "demo-user",
+  },
+];
+
+// Helper to initialize mock tickets in localStorage for demo user
+export function initializeMockTickets() {
+  const session = localStorage.getItem("ticketapp_session");
+  let currentData;
+  try {
+    currentData = session ? JSON.parse(session) : { tickets: [] };
+  } catch {
+    currentData = { tickets: [] };
+  }
+  // Only add if no tickets for demo user
+  const hasDemoTickets =
+    currentData.tickets &&
+    currentData.tickets.some((t: Ticket) => t.userId === "1");
+  if (!hasDemoTickets) {
+    currentData.tickets = [...(currentData.tickets || []), ...mockTickets];
+    localStorage.setItem("ticketapp_session", JSON.stringify(currentData));
+  }
+}
 export type TicketStatus = "open" | "in-progress" | "closed";
 export interface Ticket {
   id: string;

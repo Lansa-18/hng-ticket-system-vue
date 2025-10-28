@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { initializeMockTickets } from "@/lib/tickets";
 
 interface User {
   id: string;
@@ -70,6 +71,9 @@ export const useAuthStore = defineStore("auth", () => {
             demoUser,
           ],
         });
+
+        // Initialize mock tickets for demo user
+        initializeMockTickets();
 
         user.value = demoUser;
         router.push("/dashboard");

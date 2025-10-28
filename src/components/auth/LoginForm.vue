@@ -37,8 +37,12 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-2">
+      <div
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 py-2 px-1 text-center sm:text-left"
+      >
+        <div
+          class="flex items-center justify-center sm:justify-start space-x-2"
+        >
           <Checkbox id="remember-me" v-model="rememberMe" />
           <Label
             htmlFor="remember-me"
@@ -47,11 +51,10 @@
             Remember me
           </Label>
         </div>
-
-        <div class="text-sm">
+        <div class="text-sm mt-2 sm:mt-0">
           <router-link
             to="/auth/reset-password"
-            class="font-medium text-blue-600 hover:text-blue-500"
+            class="font-medium text-blue-600 hover:text-blue-500 whitespace-nowrap"
           >
             Forgot your password?
           </router-link>
