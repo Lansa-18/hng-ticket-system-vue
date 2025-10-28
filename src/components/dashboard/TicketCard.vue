@@ -1,64 +1,86 @@
 <template>
   <div
-    class="bg-white shadow-sm rounded-lg p-4 flex flex-col gap-4 border border-gray-200"
+    class="bg-white shadow-sm rounded-lg p-4 sm:p-5 hover:shadow-md transition-shadow border border-gray-100"
   >
-    <div class="flex items-start justify-between gap-4">
-      <div class="space-y-1 flex-1">
-        <h3 class="font-medium text-gray-900">{{ ticket.title }}</h3>
-        <p class="text-sm text-gray-600">{{ ticket.description }}</p>
+    <div
+      class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 sm:gap-4"
+    >
+      <div class="flex-1 min-w-0">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-1">
+          {{ ticket.title }}
+        </h3>
+        <p class="text-sm text-gray-600 line-clamp-2">
+          {{ ticket.description }}
+        </p>
       </div>
-      <div class="flex items-center space-x-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          class="h-8 w-8 p-0 text-gray-600 hover:text-blue-600"
-          @click="$emit('edit', ticket)"
+      <div class="flex items-center gap-2">
+        <span
+          :class="[
+            'px-2.5 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full whitespace-nowrap',
+            getStatusColor(ticket.status),
+          ]"
         >
-          <Pencil class="h-4 w-4" />
-          <span class="sr-only">Edit</span>
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          class="h-8 w-8 p-0 text-gray-600 hover:text-red-600"
-          @click="$emit('delete', ticket)"
-        >
-          <Trash2 class="h-4 w-4" />
-          <span class="sr-only">Delete</span>
-        </Button>
+          {{ ticket.status.replace("-", " ") }}
+        </span>
       </div>
     </div>
-    <div class="flex items-center justify-between">
-      <div
-        :class="[
-          'px-2.5 py-0.5 rounded-full text-xs font-medium capitalize',
-          {
-            'bg-green-100 text-green-800': ticket.status === 'open',
-            'bg-yellow-100 text-yellow-800': ticket.status === 'in-progress',
-            'bg-gray-100 text-gray-800': ticket.status === 'closed',
-          },
-        ]"
-      >
-        {{ ticket.status }}
+
+    <div
+      class="mt-3 sm:mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+    >
+      <div class="text-xs sm:text-sm text-gray-500 space-y-1">
+        <p>Created: {{ formatDate(ticket.createdAt) }}</p>
+        <p>Last Updated: {{ formatDate(ticket.updatedAt) }}</p>
       </div>
-      <span class="text-xs text-gray-500">
-        {{ new Date(ticket.createdAt).toLocaleDateString() }}
-      </span>
+
+      <div class="flex items-center gap-3 sm:gap-4">
+        <button
+          @click="$emit('edit', ticket)"
+          class="text-xs sm:text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          Edit
+        </button>
+        <button
+          @click="$emit('delete', ticket)"
+          class="text-xs sm:text-sm font-medium text-red-600 hover:text-red-800 transition-colors"
+        >
+          Delete
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { type Ticket } from "@/lib/tickets";
-import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-vue-next";
 
-defineProps<{
+const props = defineProps<{
   ticket: Ticket;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: "edit", ticket: Ticket): void;
   (e: "delete", ticket: Ticket): void;
 }>();
+
+function getStatusColor(status: string) {
+  switch (status) {
+    case "open":
+      return "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20";
+    case "in-progress":
+      return "bg-amber-50 text-amber-700 ring-1 ring-amber-600/20";
+    case "closed":
+      return "bg-gray-100 text-gray-700 ring-1 ring-gray-600/20";
+    default:
+      return "bg-blue-50 text-blue-700 ring-1 ring-blue-600/20";
+  }
+}
+
+function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
 </script>

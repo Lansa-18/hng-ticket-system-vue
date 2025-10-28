@@ -53,6 +53,7 @@ const onSubmit = (data: {
   description: string;
   status: string;
 }) => {
+  console.log("[TicketDialog] submit event received:", data);
   emit("submit", data);
 };
 </script>

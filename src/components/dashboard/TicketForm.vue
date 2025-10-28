@@ -107,6 +107,7 @@ const ticketSchema = z.object({
     .max(100, "Title cannot exceed 100 characters"),
   description: z
     .string()
+    .trim()
     .min(10, "Description must be at least 10 characters")
     .max(1000, "Description cannot exceed 1000 characters"),
   status: z.enum(["open", "in-progress", "closed"] as const),

@@ -20,7 +20,7 @@
     <TicketDialog
       v-model="dialogOpen"
       :ticket="editingTicket"
-      @submit="editingTicket ? handleUpdateTicket : handleCreateTicket"
+      @submit="handleDialogSubmit"
     />
 
     <div class="space-y-4">
@@ -104,15 +104,19 @@ const handleCreateTicket = async (data: CreateTicketData) => {
   if (!user) return;
 
   try {
+    console.log("[TicketsView] handleCreateTicket called with:", data);
     const newTicket = await ticketService.createTicket({
       ...data,
       userId: user.id,
     });
+    console.log("[TicketsView] newTicket returned:", newTicket);
     tickets.value = [...tickets.value, newTicket];
+    console.log("[TicketsView] tickets array after add:", tickets.value);
     setDialogOpen(false);
     toast.success("Ticket created successfully");
   } catch (error) {
     toast.error("Failed to create ticket");
+    console.error("Ticket creation error:", error);
     throw error;
   }
 };
@@ -146,6 +150,18 @@ const handleDeleteTicket = async (ticket: Ticket) => {
   } catch (error) {
     toast.error("Failed to delete ticket");
     throw error;
+  }
+};
+
+const handleDialogSubmit = (data: {
+  title: string;
+  description: string;
+  status: string;
+}) => {
+  if (editingTicket.value) {
+    handleUpdateTicket(data as UpdateTicketData);
+  } else {
+    handleCreateTicket(data as CreateTicketData);
   }
 };
 

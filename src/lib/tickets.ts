@@ -1,8 +1,9 @@
+export type TicketStatus = "open" | "in-progress" | "closed";
 export interface Ticket {
   id: string;
   title: string;
   description: string;
-  status: "open" | "in-progress" | "closed";
+  status: TicketStatus;
   userId: string;
   createdAt: string;
   updatedAt: string;
@@ -68,7 +69,15 @@ export const ticketService = {
     data: Omit<Ticket, "id" | "createdAt" | "updatedAt">
   ): Promise<Ticket> {
     const session = localStorage.getItem("ticketapp_session");
-    const currentData = session ? JSON.parse(session) : { tickets: [] };
+    let currentData;
+    try {
+      currentData = session ? JSON.parse(session) : { tickets: [] };
+    } catch {
+      currentData = { tickets: [] };
+    }
+    if (!Array.isArray(currentData.tickets)) {
+      currentData.tickets = [];
+    }
 
     const newTicket: Ticket = {
       ...data,
