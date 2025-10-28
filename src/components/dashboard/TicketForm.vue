@@ -1,8 +1,13 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-4 mt-4">
+  <form @submit.prevent="onSubmit" class="space-y-4 mt-4">
     <div class="space-y-2">
       <Label for="title">Title</Label>
-      <Input v-model="form.title" id="title" :disabled="isSubmitting" />
+      <Input
+        id="title"
+        v-model="form.title"
+        :disabled="isSubmitting"
+        placeholder="Enter ticket title"
+      />
       <p v-if="errors.title" class="text-sm text-destructive">
         {{ errors.title }}
       </p>
@@ -11,10 +16,11 @@
     <div class="space-y-2">
       <Label for="description">Description</Label>
       <Textarea
-        v-model="form.description"
         id="description"
-        rows="4"
+        v-model="form.description"
         :disabled="isSubmitting"
+        rows="4"
+        placeholder="Enter ticket description"
       />
       <p v-if="errors.description" class="text-sm text-destructive">
         {{ errors.description }}
@@ -24,11 +30,9 @@
     <div class="space-y-2">
       <Label for="status">Status</Label>
       <Select v-model="form.status" :disabled="isSubmitting">
-        <template #trigger>
-          <SelectTrigger>
-            <SelectValue :placeholder="form.status || 'Select status'" />
-          </SelectTrigger>
-        </template>
+        <SelectTrigger>
+          <SelectValue placeholder="Select status" />
+        </SelectTrigger>
         <SelectContent>
           <SelectItem value="open">Open</SelectItem>
           <SelectItem value="in-progress">In Progress</SelectItem>
@@ -44,15 +48,15 @@
       <Button
         type="button"
         variant="outline"
-        @click="onCancel"
+        @click="$emit('cancel')"
         :disabled="isSubmitting"
       >
         Cancel
       </Button>
       <Button
         type="submit"
-        class="bg-blue-700 hover:bg-blue-500"
         :disabled="isSubmitting"
+        class="bg-blue-700 hover:bg-blue-500"
       >
         {{
           isSubmitting
@@ -69,6 +73,7 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import { z } from "zod";
+import type { Ticket, TicketStatus } from "@/lib/tickets";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -80,23 +85,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "vue-toastification";
-import type { Ticket, TicketStats } from "@/lib/tickets";
 
 const props = defineProps<{
   ticket?: Ticket;
-  onSubmit: (data: TicketFormValues) => Promise<void>;
-  onCancel: () => void;
 }>();
 
-const toast = useToast();
-const isSubmitting = ref(false);
+const emit = defineEmits<{
+  (
+    e: "submit",
+    data: { title: string; description: string; status: TicketStatus }
+  ): void;
+  (e: "cancel"): void;
+}>();
 
-interface TicketFormValues {
-  title: string;
-  description: string;
-  status: TicketStats;
-}
+const isSubmitting = ref(false);
 
 const ticketSchema = z.object({
   title: z
@@ -110,10 +112,10 @@ const ticketSchema = z.object({
   status: z.enum(["open", "in-progress", "closed"] as const),
 });
 
-const form = reactive<TicketFormValues>({
-  title: props.ticket?.title || "",
-  description: props.ticket?.description || "",
-  status: props.ticket?.status || "open",
+const form = reactive({
+  title: props.ticket?.title ?? "",
+  description: props.ticket?.description ?? "",
+  status: props.ticket?.status ?? ("open" as TicketStatus),
 });
 
 const errors = reactive({
@@ -122,29 +124,26 @@ const errors = reactive({
   status: "",
 });
 
-const validate = () => {
+const validateForm = () => {
   const result = ticketSchema.safeParse(form);
   if (!result.success) {
     const formattedErrors = result.error.format();
-    errors.title = formattedErrors.title?._errors[0] || "";
-    errors.description = formattedErrors.description?._errors[0] || "";
-    errors.status = formattedErrors.status?._errors[0] || "";
+    errors.title = formattedErrors.title?._errors[0] ?? "";
+    errors.description = formattedErrors.description?._errors[0] ?? "";
+    errors.status = formattedErrors.status?._errors[0] ?? "";
     return false;
   }
   return true;
 };
 
-const handleSubmit = async () => {
-  if (!validate()) return;
+const onSubmit = async () => {
+  if (!validateForm()) return;
 
   isSubmitting.value = true;
   try {
-    await props.onSubmit(form);
+    await emit("submit", form);
   } catch (error) {
     console.error("Form submission error:", error);
-    toast.error(
-      error instanceof Error ? error.message : "Failed to save ticket"
-    );
   } finally {
     isSubmitting.value = false;
   }

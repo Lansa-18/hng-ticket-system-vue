@@ -14,7 +14,7 @@
             type="email"
             autocomplete="email"
             placeholder="demo@example.com"
-            :disabled="isLoading"
+            :disabled="auth.isLoading"
           />
           <p v-if="errors.email" class="text-sm text-destructive">
             {{ errors.email }}
@@ -29,7 +29,7 @@
             type="password"
             autocomplete="current-password"
             placeholder="Enter your password"
-            :disabled="isLoading"
+            :disabled="auth.isLoading"
           />
           <p v-if="errors.password" class="text-sm text-destructive">
             {{ errors.password }}
@@ -61,9 +61,9 @@
       <Button
         type="submit"
         class="w-full bg-blue-700 hover:bg-blue-500"
-        :disabled="isLoading"
+        :disabled="auth.isLoading"
       >
-        {{ isLoading ? "Signing in..." : "Sign in" }}
+        {{ auth.isLoading ? "Signing in..." : "Sign in" }}
       </Button>
 
       <div class="text-center">
@@ -83,7 +83,6 @@
 
 <script setup lang="ts">
 import { ref, reactive } from "vue";
-import { useRouter } from "vue-router";
 import * as z from "zod";
 import { useToast } from "vue-toastification";
 import AuthCard from "./AuthCard.vue";
@@ -91,11 +90,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { auth } from "@/lib/auth";
+import { useAuthStore } from "@/stores/auth";
 
-const router = useRouter();
+const auth = useAuthStore();
 const toast = useToast();
-const isLoading = ref(false);
 const rememberMe = ref(false);
 
 const form = reactive({
@@ -130,22 +128,15 @@ const validateForm = () => {
 const onSubmit = async () => {
   if (!validateForm()) return;
 
-  isLoading.value = true;
   try {
-    await auth.login(form.email, form.password);
-
-    if (!auth.checkAuth()) {
-      throw new Error("Failed to create session");
+    const success = await auth.login(form.email, form.password);
+    if (success) {
+      toast.success("Logged in successfully!");
     }
-
-    toast.success("Logged in successfully!");
-    router.push("/dashboard");
   } catch (error) {
     toast.error(
       error instanceof Error ? error.message : "Invalid email or password"
     );
-  } finally {
-    isLoading.value = false;
   }
 };
 </script>

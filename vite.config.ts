@@ -5,7 +5,10 @@ import { fileURLToPath, URL } from "node:url";
 export default defineConfig({
   plugins: [vue()],
   server: {
-    port: 3001,
+    port: 3002,
+    hmr: {
+      overlay: false,
+    },
   },
   resolve: {
     alias: {

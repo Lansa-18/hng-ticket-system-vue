@@ -1,3 +1,4 @@
+<!-- src/components/dashboard/Header.vue -->
 <template>
   <header class="bg-white shadow">
     <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,7 +51,7 @@
             @click="handleLogout"
             class="flex items-center px-3 py-2 sm:px-4 sm:py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            <LogOut class="h-5 w-5" />
+            <i class="ri-logout-box-line text-lg"></i>
           </Button>
         </div>
       </div>
@@ -62,14 +63,14 @@
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-vue-next";
 
 const router = useRouter();
 const auth = useAuthStore();
-const { user } = auth;
 
 const handleLogout = () => {
   auth.logout();
   router.push("/");
 };
+
+const { user } = auth;
 </script>
