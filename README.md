@@ -1,10 +1,6 @@
 # TrackiT - Ticket Management System (Vue Version)
 
 TrackiT is a modern, responsive ticket management system built with Vue 3 and TypeScript. It provides a clean and intuitive interface for managing support tickets, with features like responsive design, real-time updates, and a smooth user experience.
-
-**LIVE URL:**  
-[Live - URL]
-
 ---
 
 ## 🛠️ Technologies and Libraries
@@ -36,7 +32,7 @@ TrackiT is a modern, responsive ticket management system built with Vue 3 and Ty
 
    ```sh
    git clone https://github.com/Lansa-18/hng-ticket-system-vue.git
-   cd ticket-system-vue
+   cd hng-ticket-system-vue
    ```
 
 2. **Install dependencies**
@@ -55,7 +51,7 @@ TrackiT is a modern, responsive ticket management system built with Vue 3 and Ty
 ## 🏗️ Project Structure
 
 ```
-ticket-system-vue/
+hng-ticket-system-vue/
 ├── public/                # Static assets
 ├── src/
 │   ├── app/               # App entry and routing
